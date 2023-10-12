@@ -6,9 +6,9 @@ exo:
         - name: Secteur Sainte Julie
           url: https://exo.quebec/xdata/omitsju/google_transit.zip
           type: gtfs
-          output_path: ""
+          output_path: resources/autobus_secteur_sainte_julie.csv
       trains:
         - name: Trains Horaire et parcours planifiés
           url: https://exo.quebec/xdata/trains/google_transit.zip
           type: gtfs
-          output_path: ""
+          output_path: resources/train_horaire_et_parcours.csv
