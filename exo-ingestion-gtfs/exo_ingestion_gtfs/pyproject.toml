@@ -1,0 +1,7 @@
+[project]
+name = "exo-ingestion-gtfs"
+version = "0.0.1"
+description = "package responsable de l'ingestion des données brute gtfs produits par exo"
+authors = ["Christian Bruneau <christian.bruneau777@gmail.com>"]
+
+[project.dependencies]
