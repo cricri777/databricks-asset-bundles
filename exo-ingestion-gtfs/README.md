@@ -44,34 +44,70 @@ Contenu :
 - date_export : ?? format %Y-%m-%d
 - geometry - Polygon : le territoire exo type polygon
 
-### Autobus - Secteur Sorel-Varennes - Horaires et parcours planifiés (GTFS)
+### 4 Autobus - Secteur Sorel-Varennes - Horaires et parcours planifiés (GTFS)
 Identifiant : 5a352b9d-44fc-4474-a537-e63444fab58e  
 Url : https://www.donneesquebec.ca/recherche/dataset/sorel-varennes-gtfs  
 Source : 	https://exo.quebec/xdata/citsv/google_transit.zip  
 Type : GTFS
 
 
-### Trains - Exo - Horaires et parcours planifiés (GTFS)
+### 5 Trains - Exo - Horaires et parcours planifiés (GTFS)
 Identifiant : add94538-0df0-447b-8ec8-18741a0b7736  
 Url : https://www.donneesquebec.ca/recherche/dataset/exo-trains-gtfs  
 Source : 	https://exo.quebec/xdata/trains/google_transit.zip  
 Type : GTFS
 
 
-### Autobus - Secteur Sud-ouest - Horaires et parcours planifiés (GTFS) 
+### 6 Autobus - Secteur Sud-ouest - Horaires et parcours planifiés (GTFS)
+Identifiant : 0c0bc533-f539-4ca8-92b4-2d521fd6542e  
+Url : https://www.donneesquebec.ca/recherche/dataset/sud-ouest-gtfs  
+Source : 	https://exo.quebec/xdata/citso/google_transit.zip  
+Type : GTFS
 
-### Autobus - Secteur Laurentides - Horaires et parcours planifiés (GTFS) 
+### 7 Autobus - Secteur Laurentides - Horaires et parcours planifiés (GTFS) 
+Identifiant : ca69f450-e24e-4666-aa61-be5d63fd0348  
+Url : https://www.donneesquebec.ca/recherche/dataset/laurentides-gtfs  
+Source : https://exo.quebec/xdata/citla/google_transit.zip  
+Type : GTFS
 
-### Autobus - Secteur Vallée-du-Richelieu - Horaires et parcours planifiés (GTFS) 
+### 8 Autobus - Secteur Vallée-du-Richelieu - Horaires et parcours planifiés (GTFS) 
+Identifiant : 82275da4-83fd-4a1e-bbcd-d087d64154ac  
+Url : https://www.donneesquebec.ca/recherche/dataset/vallee-du-richelieu-gtfs  
+Source : https://exo.quebec/xdata/citvr/google_transit.zip  
+Type : GTFS
 
-### Autobus - Secteur Terrebonne-Mascouche - Horaires et parcours planifiés (GTFS)
+### 9 Autobus - Secteur Terrebonne-Mascouche - Horaires et parcours planifiés (GTFS)
+Identifiant : 17c7dacf-b491-44cd-ba47-eecea5efb334  
+Url : https://www.donneesquebec.ca/recherche/dataset/terrebonne-mascouche-gtfs  
+Source : https://exo.quebec/xdata/mrclm/google_transit.zip  
+Type : GTFS
 
-### Autobus - Secteur Sainte-Julie - Horaires et parcours planifiés (GTFS) 
+### 10 Autobus - Secteur Sainte-Julie - Horaires et parcours planifiés (GTFS) 
+Identifiant : f298ba15-02cf-473f-aa88-49fcbb63b6a6  
+Url : https://www.donneesquebec.ca/recherche/dataset/sainte-julie-gtfs  
+Source : https://exo.quebec/xdata/omitsju/google_transit.zip  
+Type : GTFS
 
-### Autobus - Secteur de La Presqu'île - Horaires et parcours planifiés (GTFS)
+### 11 Autobus - Secteur de La Presqu'île - Horaires et parcours planifiés (GTFS)
+Identifiant : be1cca17-d9e8-45b8-b59b-be90c5f8602e
+Url : https://www.donneesquebec.ca/recherche/dataset/presquile-gtfs  
+Source : https://exo.quebec/xdata/citpi/google_transit.zip  
+Type : GTFS
 
-### Autobus - Secteur Haut-Saint-Laurent - Horaires et parcours planifiés (GTFS)
+### 12 Autobus - Secteur Haut-Saint-Laurent - Horaires et parcours planifiés (GTFS)
+Identifiant : 2cb1d60a-4410-4e05-a33d-5071bddcd031  
+Url : https://www.donneesquebec.ca/recherche/dataset/haut-saint-laurent-gtfs  
+Source : https://exo.quebec/xdata/cithsl/google_transit.zip    
+Type : GTFS
 
-### Autobus - Secteur L'Assomption - Horaires et parcours planifiés (GTFS)
+### 13 Autobus - Secteur L'Assomption - Horaires et parcours planifiés (GTFS)
+Identifiant : 5bf50944-0fc0-4f76-a96d-3f58314d940e  
+Url : https://www.donneesquebec.ca/recherche/dataset/lassomption-gtfs    
+Source : https://exo.quebec/xdata/mrclasso/google_transit.zip  
+Type : GTFS
 
-### Autobus - Secteur Chambly-Richelieu-Carignan - Horaires et parcours planifiés (GTFS)
+### 14 Autobus - Secteur Chambly-Richelieu-Carignan - Horaires et parcours planifiés (GTFS)
+Identifiant : 5bf50944-0fc0-4f76-a96d-3f58314d940e  
+Url : https://www.donneesquebec.ca/recherche/dataset/chambly-richelieu-carignan-gtfs  
+Source : https://exo.quebec/xdata/citcrc/google_transit.zip  
+Type : GTFS
