@@ -10,6 +10,12 @@ def run(configuration_file_path="resources/configuration.yml"):
     print(config.ingestion_dataset_trains)
     print(config.ingestion_dataset_autobuses)
 
+    # TODO : fix this
+    for autobus in config.ingestion_dataset_autobuses:
+        content = get_content(autobus["url"])
+        with open(autobus["output_path"], "w") as file:
+            file.write()
+
     for train in config.ingestion_dataset_trains:
         content = get_content(train["url"])
         with open(train["output_path"], "w") as file:

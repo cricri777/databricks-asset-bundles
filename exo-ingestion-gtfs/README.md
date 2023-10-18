@@ -47,7 +47,7 @@ Contenu :
 ### 4 Autobus - Secteur Sorel-Varennes - Horaires et parcours planifiés (GTFS)
 Identifiant : 5a352b9d-44fc-4474-a537-e63444fab58e  
 Url : https://www.donneesquebec.ca/recherche/dataset/sorel-varennes-gtfs  
-Source : 	https://exo.quebec/xdata/citsv/google_transit.zip  
+Source : https://exo.quebec/xdata/citsv/google_transit.zip  
 Type : GTFS
 
 

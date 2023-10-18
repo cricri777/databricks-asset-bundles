@@ -3,12 +3,11 @@ exo:
   ingestion:
     dataset:
       autobuses:
-        - name: Secteur Sainte Julie
-          url: https://exo.quebec/xdata/omitsju/google_transit.zip
-          type: gtfs
+        - name: 4 Autobus - Secteur Sorel-Varennes
+          url: https://exo.quebec/xdata/citsv/google_transit.zip
+          type: zip
           output_path: resources/autobus_secteur_sainte_julie.csv
       trains:
-        - name: Trains Horaire et parcours planifiés
-          url: https://exo.quebec/xdata/trains/google_transit.zip
-          type: gtfs
-          output_path: resources/train_horaire_et_parcours.csv
+        - name: 1 Lignes de train exo
+          url: https://exo.quebec/donnees_geomatiques/train_lignes_exo.geojson
+          type: geojson
