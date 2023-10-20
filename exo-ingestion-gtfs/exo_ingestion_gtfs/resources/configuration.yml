@@ -2,12 +2,48 @@
 exo:
   ingestion:
     dataset:
+      territoire:
+        - name: 3 Territoire exo
+          url: https://exo.quebec/donnees_geomatiques/territoire_exo.geojson
+          type: geojson
       autobuses:
         - name: 4 Autobus - Secteur Sorel-Varennes
           url: https://exo.quebec/xdata/citsv/google_transit.zip
           type: zip
-          output_path: resources/autobus_secteur_sainte_julie.csv
+        - name: 6 Autobus - Secteur Sud-ouest
+          url: https://exo.quebec/xdata/citso/google_transit.zip
+          type: zip
+        - name: 7 Autobus - Secteur Laurentides
+          url: https://exo.quebec/xdata/citla/google_transit.zip
+          type: zip
+        - name: 8 Autobus - Secteur Vallée-du-Richelieu
+          url: https://exo.quebec/xdata/citvr/google_transit.zip
+          type: zip
+        - name: 9 Autobus - Secteur Terrebonne-Mascouche
+          url: https://exo.quebec/xdata/mrclm/google_transit.zip
+          type: zip
+        - name: 10 Autobus - Secteur Sainte-Julie
+          url: https://exo.quebec/xdata/omitsju/google_transit.zip
+          type: zip
+        - name: 11 Autobus - Secteur de La Presqu'île
+          url: https://exo.quebec/xdata/citpi/google_transit.zip
+          type: zip
+        - name: 12 Autobus - Secteur Haut-Saint-Laurent
+          url: https://exo.quebec/xdata/cithsl/google_transit.zip
+          type: zip
+        - name: 13 Autobus - Secteur L'Assomption
+          url: https://exo.quebec/xdata/mrclasso/google_transit.zip
+          type: zip
+        - name: 14 Autobus - Secteur Chambly-Richelieu-Carignan
+          url: https://exo.quebec/xdata/citcrc/google_transit.zip
+          type: zip
       trains:
         - name: 1 Lignes de train exo
           url: https://exo.quebec/donnees_geomatiques/train_lignes_exo.geojson
           type: geojson
+        - name: 2 Gares de train exo
+          url: https://exo.quebec/donnees_geomatiques/train_gares_exo.geojson
+          type: geojson
+        - name: 5 Trains - Exo
+          url: https://exo.quebec/xdata/trains/google_transit.zip
+          type: gtfs
