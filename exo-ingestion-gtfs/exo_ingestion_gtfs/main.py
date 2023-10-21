@@ -5,21 +5,21 @@ import zipfile
 from configuration import Configuration
 
 
-def run(configuration_file_path="resources/configuration.yml"):
+def run(environment="dev"):
+    configuration_file_path = f"resources/configuration-{environment.lower()}.yml"
     config = Configuration(configuration_file_path)
     print(config.ingestion_dataset_trains)
     print(config.ingestion_dataset_autobuses)
 
-    # TODO : fix this
     for autobus in config.ingestion_dataset_autobuses:
         content = get_content(autobus["url"])
         with open(autobus["output_path"], "w") as file:
             file.write()
 
-    for train in config.ingestion_dataset_trains:
-        content = get_content(train["url"])
-        with open(train["output_path"], "w") as file:
-            file.write(content.decode())
+    # for train in config.ingestion_dataset_trains:
+    #     content = get_content(train["url"])
+    #     with open(train["output_path"], "w") as file:
+    #         file.write(content.decode())
 
 
 def get_content(url):

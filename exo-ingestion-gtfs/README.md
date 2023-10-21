@@ -1,3 +1,9 @@
+# A propos Du Projet
+ingestion et processing des données gtfs et publique de la compagnie [Exo](https://exo.quebec/fr)
+Ce pipeline tente de répondre aux questions suivante :
+- Quels sont les horaires des bus et trains ?
+- Quels sont les trajets des bus et trains ?
+
 ## Analyse de données pour GTFS de Exo
 ### 1 Lignes de train exo
 Identifiant : 0bc4dc35-a12b-4695-8e0a-21b87c18d8a4  

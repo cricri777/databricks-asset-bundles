@@ -5,3 +5,4 @@ description = "package responsable de l'ingestion des données brute gtfs produi
 authors = ["Christian Bruneau <christian.bruneau777@gmail.com>"]
 
 [project.dependencies]
+requires-python = ">=3.10"

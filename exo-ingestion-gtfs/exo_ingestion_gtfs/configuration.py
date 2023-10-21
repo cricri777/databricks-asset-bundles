@@ -2,7 +2,7 @@ import yaml
 
 
 class Configuration:
-    """Configuration class to parse configuration.yml"""
+    """Configuration class to parse configuration-dev.yml"""
     def __init__(self, configuration_file_path):
         with open(configuration_file_path, "r") as config_yaml_file:
             config = yaml.safe_load(config_yaml_file)
