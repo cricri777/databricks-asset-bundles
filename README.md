@@ -12,7 +12,5 @@ Ingestion des données gtfs de Exo disponible sur le site [donneesquebec.ca](htt
 ### exo/insights_gtfs
 ### exo/delta_live_table
 
-
 ## License
-
 [MIT](https://choosealicense.com/licenses/mit/)

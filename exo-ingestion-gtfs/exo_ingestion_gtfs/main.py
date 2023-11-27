@@ -3,18 +3,23 @@ import urllib.request as urllib
 import zipfile
 
 from configuration import Configuration
-
+from databricks.sdk import WorkspaceClient
 
 def run(environment="dev"):
-    configuration_file_path = f"resources/configuration-{environment.lower()}.yml"
-    config = Configuration(configuration_file_path)
-    print(config.ingestion_dataset_trains)
-    print(config.ingestion_dataset_autobuses)
+    w = WorkspaceClient()
+    for i in w.dbfs.list("/"):
+        print(i.path)
 
-    for autobus in config.ingestion_dataset_autobuses:
-        content = get_content(autobus["url"])
-        with open(autobus["output_path"], "w") as file:
-            file.write()
+
+    # configuration_file_path = f"resources/configuration-{environment.lower()}.yml"
+    # config = Configuration(configuration_file_path)
+    # print(config.ingestion_dataset_trains)
+    # print(config.ingestion_dataset_autobuses)
+    #
+    # for autobus in config.ingestion_dataset_autobuses:
+    #     content = get_content(autobus["url"])
+    #     with open(autobus["output_path"], "w") as file:
+    #         file.write()
 
     # for train in config.ingestion_dataset_trains:
     #     content = get_content(train["url"])

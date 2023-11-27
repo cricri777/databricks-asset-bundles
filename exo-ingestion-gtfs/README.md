@@ -117,3 +117,13 @@ Identifiant : 5bf50944-0fc0-4f76-a96d-3f58314d940e
 Url : https://www.donneesquebec.ca/recherche/dataset/chambly-richelieu-carignan-gtfs  
 Source : https://exo.quebec/xdata/citcrc/google_transit.zip  
 Type : GTFS
+
+# Pour commencer
+## Excution local (databricks-connect)
+### pré-requis
+- python > 3.10
+- databricks cli > 0.205
+- variable d'environnement :
+  - DATABRICKS_CLUSTER_ID=1127-184500-z9lq82ws;
+  - DATABRICKS_HOST=https://adb-7865087530835937.17.azuredatabricks.net/;
+  - DATABRICKS_TOKEN=<ton_token_ici>
