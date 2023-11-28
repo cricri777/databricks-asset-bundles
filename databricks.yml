@@ -1,3 +1,33 @@
 # yaml-language-server: $schema=bundle_config_schema.json
 bundle:
-  name: gtfs-bundle
+  name: gtfs-exo-bundle
+
+workspace:
+  host: https://adb-7865087530835937.17.azuredatabricks.net/
+
+artifacts:
+  default:
+    type: whl
+    build: poetry build
+    path: exo-ingestion-gtfs
+
+resources:
+  jobs:
+    exo-ingestion-gtfs:
+      name: exo-ingestion-gtfs
+      tasks:
+        - task_key: exo-ingestion-gtfs-task
+          new_cluster:
+            spark_version: 13.3.x-scala2.12
+            node_type_id: Standard_DS3_v2
+            data_security_mode: USER_ISOLATION
+            num_workers: 1
+          python_wheel_task:
+            entry_point: main
+            package_name: exo_ingestion_gtfs
+          libraries:
+            - whl: exo-ingestion-gtfs/dist/*.whl
+
+environments:
+  dev:
+    default: true

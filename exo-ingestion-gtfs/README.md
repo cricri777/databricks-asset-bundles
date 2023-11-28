@@ -127,3 +127,5 @@ Type : GTFS
   - DATABRICKS_CLUSTER_ID=1127-184500-z9lq82ws;
   - DATABRICKS_HOST=https://adb-7865087530835937.17.azuredatabricks.net/;
   - DATABRICKS_TOKEN=<ton_token_ici>
+
+adb connector : /subscriptions/e921008b-db34-4fe4-8e81-5e87d56e1824/resourceGroups/cricri/providers/Microsoft.Databricks/accessConnectors/adbconnector
