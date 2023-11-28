@@ -1,16 +1,17 @@
 import os
 
-from pyspark.sql.functions import current_date, col
+from pyspark.sql.functions import current_date
 from requests import get
 from io import BytesIO
 from zipfile import ZipFile
 import pandas as pd
 import fire
-import pyspark.pandas as ps
 
 from databricks.sdk import WorkspaceClient
 from databricks.connect import DatabricksSession
+
 os.environ["PYARROW_IGNORE_TIMEZONE"] = '1'
+
 
 def run(env="dev"):
     w = WorkspaceClient()
@@ -106,27 +107,32 @@ def run(env="dev"):
     shapes_df = shapes_df.astype("string")
     feed_info_df = feed_info_df.astype("string")
 
-    spark_agency_df = session.createDataFrame(agency_df).withColumn("landing_date", current_date())
-    spark_stops_df = session.createDataFrame(stops_df).withColumn("landing_date", current_date())
-    spark_routes_df = session.createDataFrame(routes_df).withColumn("landing_date", current_date())
-    spark_trips_df = session.createDataFrame(trips_df).withColumn("landing_date", current_date())
-    spark_stop_times_df = session.createDataFrame(stop_times_df).withColumn("landing_date", current_date())
-    spark_calendar_df = session.createDataFrame(calendar_df).withColumn("landing_date", current_date())
-    spark_calendar_dates_df = session.createDataFrame(calendar_dates_df).withColumn("landing_date", current_date())
-    spark_fare_rules_df = session.createDataFrame(fare_rules_df).withColumn("landing_date", current_date())
-    spark_shapes_df = session.createDataFrame(shapes_df).withColumn("landing_date", current_date())
-    spark_feed_info_df = session.createDataFrame(feed_info_df).withColumn("landing_date", current_date())
+    # spark_agency_df = session.createDataFrame(agency_df).withColumn("landing_date", current_date())
+    # spark_stops_df = session.createDataFrame(stops_df).withColumn("landing_date", current_date())
+    # spark_routes_df = session.createDataFrame(routes_df).withColumn("landing_date", current_date())
+    # spark_trips_df = session.createDataFrame(trips_df).withColumn("landing_date", current_date())
+    df_1 = stop_times_df.iloc[:300000, :]
+    df_2 = stop_times_df.iloc[300000:, :]
+    spark_stop_times_df1 = session.createDataFrame(df_1).withColumn("landing_date", current_date())
+    spark_stop_times_df2 = session.createDataFrame(df_2).withColumn("landing_date", current_date())
+    # spark_calendar_df = session.createDataFrame(calendar_df).withColumn("landing_date", current_date())
+    # spark_calendar_dates_df = session.createDataFrame(calendar_dates_df).withColumn("landing_date", current_date())
+    # spark_fare_rules_df = session.createDataFrame(fare_rules_df).withColumn("landing_date", current_date())
+    # spark_shapes_df = session.createDataFrame(shapes_df).withColumn("landing_date", current_date())
+    # spark_feed_info_df = session.createDataFrame(feed_info_df).withColumn("landing_date", current_date())
 
-    spark_agency_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.agency")
-    spark_stops_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.stops")
-    spark_routes_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.routes")
-    spark_trips_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.trips")
-    # spark_stop_times_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.stop_times")
-    spark_calendar_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.calendar")
-    spark_calendar_dates_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.calendar_dates")
-    spark_fare_rules_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.fare_rules")
-    spark_shapes_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.shapes")
-    spark_feed_info_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.feed_info")
+    # spark_agency_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.agency")
+    # spark_stops_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.stops")
+    # spark_routes_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.routes")
+    # spark_trips_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.trips")
+    spark_stop_times_df1.union(spark_stop_times_df2).write.mode("overwrite").option("replaceWhere",
+                                                                                    "landing_date = current_date()").saveAsTable(
+        f"exo_{env}.gtfs_landing.stop_times")
+    # spark_calendar_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.calendar")
+    # spark_calendar_dates_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.calendar_dates")
+    # spark_fare_rules_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.fare_rules")
+    # spark_shapes_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.shapes")
+    # spark_feed_info_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.feed_info")
 
 
 if __name__ == '__main__':
