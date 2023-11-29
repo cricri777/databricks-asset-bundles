@@ -14,7 +14,7 @@ artifacts:
 resources:
   jobs:
     exo-ingestion-gtfs:
-      name: exo-ingestion-gtfs
+      name: exo-ingestion-gtfs-${bundle.target}
       tasks:
         - task_key: exo-ingestion-gtfs-task
           new_cluster:

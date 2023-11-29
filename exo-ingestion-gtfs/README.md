@@ -120,9 +120,11 @@ Type : GTFS
 
 # Pour commencer
 ## Excution local (databricks-connect)
-### pré-requis
+### pré-requis 
 - python > 3.10
 - databricks cli > 0.205
+- venv
+- poetry > 1.7.1
 - variable d'environnement :
   - DATABRICKS_CLUSTER_ID=1127-184500-z9lq82ws;
   - DATABRICKS_HOST=https://adb-7865087530835937.17.azuredatabricks.net/;

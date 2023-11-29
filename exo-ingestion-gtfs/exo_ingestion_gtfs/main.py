@@ -7,14 +7,13 @@ from zipfile import ZipFile
 import pandas as pd
 import fire
 
-from databricks.sdk import WorkspaceClient
 from databricks.connect import DatabricksSession
+import warnings
 
-os.environ["PYARROW_IGNORE_TIMEZONE"] = '1'
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 
-def run(env="dev"):
-    w = WorkspaceClient()
+def run(env="dev", is_dry_run=True):
     session = DatabricksSession.builder.getOrCreate()
     session.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
     session.conf.set("spark.sql.execution.arrow.pyspark.fallback.enabled", "true")
@@ -31,35 +30,37 @@ def run(env="dev"):
             print(f"execute sql [{dll_file}]")
             session.sql(query_sql.read())
 
-    list_exo_url = {
-        "autobus_chambly": "https://exo.quebec/xdata/citcrc/google_transit.zip",
-        "autobus_saintlaurent": "https://exo.quebec/xdata/cithsl/google_transit.zip",
-        "autobus_laurentides": "https://exo.quebec/xdata/citla/google_transit.zip",
-        "autobus_presquile": "https://exo.quebec/xdata/citpi/google_transit.zip",
-        "autobus_richelain": "https://exo.quebec/xdata/citlr/google_transit.zip",
-        "autobus_roussillon": "https://exo.quebec/xdata/citrous/google_transit.zip",
-        "autobus_sorel_varennes": "https://exo.quebec/xdata/citsv/google_transit.zip",
-        "autobus_sudouest": "https://exo.quebec/xdata/citso/google_transit.zip",
-        "autobus_richelieu": "https://exo.quebec/xdata/citvr/google_transit.zip",
-        "autobus_assomption": "https://exo.quebec/xdata/mrclasso/google_transit.zip",
-        "autobus_terrebonne_mascouche": "https://exo.quebec/xdata/mrclm/google_transit.zip",
-        "trains_exo": "https://exo.quebec/xdata/trains/google_transit.zip",
-        "autobus_sainte_julie": "https://exo.quebec/xdata/omitsju/google_transit.zip",
-        "autobus_richelain_roussillon": "https://exo.quebec/xdata/lrrs/google_transit.zip"
+    list_exo_url = [
+        "https://exo.quebec/xdata/citcrc/google_transit.zip",
+        "https://exo.quebec/xdata/cithsl/google_transit.zip",
+        "https://exo.quebec/xdata/citla/google_transit.zip",
+        "https://exo.quebec/xdata/citpi/google_transit.zip",
+        "https://exo.quebec/xdata/citlr/google_transit.zip",
+        "https://exo.quebec/xdata/citrous/google_transit.zip",
+        "https://exo.quebec/xdata/citsv/google_transit.zip",
+        "https://exo.quebec/xdata/citso/google_transit.zip",
+        "https://exo.quebec/xdata/citvr/google_transit.zip",
+        "https://exo.quebec/xdata/mrclasso/google_transit.zip",
+        "https://exo.quebec/xdata/mrclm/google_transit.zip",
+        "https://exo.quebec/xdata/trains/google_transit.zip",
+        "https://exo.quebec/xdata/omitsju/google_transit.zip",
+        "https://exo.quebec/xdata/lrrs/google_transit.zip"
+    ]
+
+    dict_exo_gtfs_df = {
+        "agency": pd.DataFrame(),
+        "stops": pd.DataFrame(),
+        "routes": pd.DataFrame(),
+        "trips": pd.DataFrame(),
+        "stop_times": pd.DataFrame(),
+        "calendar": pd.DataFrame(),
+        "calendar_dates": pd.DataFrame(),
+        "fare_rules": pd.DataFrame(),
+        "shapes": pd.DataFrame(),
+        "feed_info": pd.DataFrame()
     }
 
-    agency_df = pd.DataFrame()
-    stops_df = pd.DataFrame()
-    routes_df = pd.DataFrame()
-    trips_df = pd.DataFrame()
-    stop_times_df = pd.DataFrame()
-    calendar_df = pd.DataFrame()
-    calendar_dates_df = pd.DataFrame()
-    fare_rules_df = pd.DataFrame()
-    shapes_df = pd.DataFrame()
-    feed_info_df = pd.DataFrame()
-
-    for name, exo_urls in list_exo_url.items():
+    for exo_urls in list_exo_url:
         print(f"querying [{exo_urls}]")
         request = get(exo_urls)
         zip_file = ZipFile(BytesIO(request.content))
@@ -67,72 +68,49 @@ def run(env="dev"):
         for file in files:
             if file == "agency.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    agency_df = pd.concat([agency_df, pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["agency"] = pd.concat([dict_exo_gtfs_df["agency"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "stops.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    stops_df = pd.concat([stops_df, pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["stops"] = pd.concat([dict_exo_gtfs_df["stops"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "routes.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    routes_df = pd.concat([routes_df, pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["routes"] = pd.concat([dict_exo_gtfs_df["routes"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "trips.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    trips_df = pd.concat([trips_df, pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["trips"] = pd.concat([dict_exo_gtfs_df["trips"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "stop_times.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    stop_times_df = pd.concat([stop_times_df, pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["stop_times"] = pd.concat([dict_exo_gtfs_df["stop_times"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "calendar.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    calendar_df = pd.concat([calendar_df, pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["calendar"] = pd.concat([dict_exo_gtfs_df["calendar"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "calendar_dates.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    calendar_dates_df = pd.concat([calendar_dates_df, pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["calendar_dates"] = pd.concat([dict_exo_gtfs_df["calendar_dates"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "fare_rules.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    fare_rules_df = pd.concat([fare_rules_df, pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["fare_rules"] = pd.concat([dict_exo_gtfs_df["fare_rules"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "shapes.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    shapes_df = pd.concat([shapes_df, pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["shapes"] = pd.concat([dict_exo_gtfs_df["shapes"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "feed_info.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    feed_info_df = pd.concat([feed_info_df, pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["feed_info"] = pd.concat([dict_exo_gtfs_df["feed_info"], pd.read_csv(BytesIO(csvfile.read()))])
 
-    agency_df = agency_df.astype("string")
-    stops_df = stops_df.astype("string")
-    routes_df = routes_df.astype("string")
-    trips_df = trips_df.astype("string")
-    stop_times_df = stop_times_df.astype("string")
-    calendar_df = calendar_df.astype("string")
-    calendar_dates_df = calendar_dates_df.astype("string")
-    fare_rules_df = fare_rules_df.astype("string")
-    shapes_df = shapes_df.astype("string")
-    feed_info_df = feed_info_df.astype("string")
+    for gtfs_exo_name, gtfs_exo_df in dict_exo_gtfs_df.items():
+        gtfs_exo_df = gtfs_exo_df.astype("string")
+        if gtfs_exo_name == "stop_times":
+            df_1 = gtfs_exo_df.iloc[:300000, :]
+            df_2 = gtfs_exo_df.iloc[300000:, :]
+            spark_stop_times_df1 = session.createDataFrame(df_1).withColumn("landing_date", current_date())
+            spark_stop_times_df2 = session.createDataFrame(df_2).withColumn("landing_date", current_date())
+            if not is_dry_run:
+                spark_stop_times_df1.union(spark_stop_times_df2).write.mode("overwrite").option("replaceWhere","landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.{gtfs_exo_name}")
 
-    # spark_agency_df = session.createDataFrame(agency_df).withColumn("landing_date", current_date())
-    # spark_stops_df = session.createDataFrame(stops_df).withColumn("landing_date", current_date())
-    # spark_routes_df = session.createDataFrame(routes_df).withColumn("landing_date", current_date())
-    # spark_trips_df = session.createDataFrame(trips_df).withColumn("landing_date", current_date())
-    df_1 = stop_times_df.iloc[:300000, :]
-    df_2 = stop_times_df.iloc[300000:, :]
-    spark_stop_times_df1 = session.createDataFrame(df_1).withColumn("landing_date", current_date())
-    spark_stop_times_df2 = session.createDataFrame(df_2).withColumn("landing_date", current_date())
-    # spark_calendar_df = session.createDataFrame(calendar_df).withColumn("landing_date", current_date())
-    # spark_calendar_dates_df = session.createDataFrame(calendar_dates_df).withColumn("landing_date", current_date())
-    # spark_fare_rules_df = session.createDataFrame(fare_rules_df).withColumn("landing_date", current_date())
-    # spark_shapes_df = session.createDataFrame(shapes_df).withColumn("landing_date", current_date())
-    # spark_feed_info_df = session.createDataFrame(feed_info_df).withColumn("landing_date", current_date())
-
-    # spark_agency_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.agency")
-    # spark_stops_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.stops")
-    # spark_routes_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.routes")
-    # spark_trips_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.trips")
-    spark_stop_times_df1.union(spark_stop_times_df2).write.mode("overwrite").option("replaceWhere",
-                                                                                    "landing_date = current_date()").saveAsTable(
-        f"exo_{env}.gtfs_landing.stop_times")
-    # spark_calendar_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.calendar")
-    # spark_calendar_dates_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.calendar_dates")
-    # spark_fare_rules_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.fare_rules")
-    # spark_shapes_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.shapes")
-    # spark_feed_info_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.feed_info")
+        else:
+            gtfs_exo_pyspark_df = session.createDataFrame(gtfs_exo_df).withColumn("landing_date", current_date())
+            if not is_dry_run:
+                gtfs_exo_pyspark_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.{gtfs_exo_name}")
 
 
 if __name__ == '__main__':
