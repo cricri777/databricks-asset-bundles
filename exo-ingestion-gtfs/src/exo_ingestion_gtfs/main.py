@@ -23,8 +23,8 @@ def run(env="dev", is_dry_run=False):
 
     session.sql(f"CREATE CATALOG IF NOT EXISTS exo_{env} COMMENT 'Catalog pour les données GTFS Exo env [{env}]'")
 
-    session.sql(
-        f"CREATE SCHEMA IF NOT EXISTS exo_{env}.gtfs_landing COMMENT 'Schema landing pour les données GTFS Exo env [{env}]'")
+    session.sql(f"CREATE SCHEMA IF NOT EXISTS exo_{env}.gtfs_landing COMMENT 'Schema landing pour les données GTFS Exo env [{env}]'")
+    session.sql(f"CREATE SCHEMA IF NOT EXISTS exo_{env}.gtfs_refined COMMENT 'Schema Refined pour les données GTFS Exo env [{env}]'")
 
     session.sql(f"USE CATALOG exo_{env}")
 

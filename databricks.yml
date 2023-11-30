@@ -26,25 +26,18 @@ resources:
               - ${bundle.target}
           libraries:
             - whl: exo-ingestion-gtfs/dist/*.whl
-        - task_key: exo-refine-gtfs-task
-          pipeline_task:
-            pipeline_id: exo-refine-gtfs-${bundle.target}
-            full_refresh: true
-          depends_on:
-            - task_key: exo-ingestion-gtfs-task
 
   pipelines:
     exo-refine-gtfs:
       name: exo-refine-gtfs-${bundle.target}
       catalog: exo_${bundle.target}
       target: gtfs_refined
-      development: true
       continuous: false
       channel: CURRENT
       photon: false
       libraries:
         - notebook:
-            path: ./exo-refined-gtfs/exo_gtfs_refine_deltalivetable.ipynb
+            path: ./exo-refined-gtfs/exo_gtfs_refine_deltalivetable-${bundle.target}.ipynb
       edition: CORE
       clusters:
         - label: "default"
@@ -52,14 +45,27 @@ resources:
           node_type_id: "Standard_F4"
           driver_node_type_id: "Standard_F4"
 
-environments:
+targets:
   dev:
     default: true
+    mode: development
   qa:
-#    workspace:
-#      host: <qa_workspace>
-  prod:
+    mode: development
     resources:
       jobs:
-  #    workspace:
-  #      host: <prod_workspace>
+        exo-ingestion-gtfs:
+          tasks:
+          - task_key: exo-ingestion-gtfs-task
+            description: exo gtfs en qa
+  prod:
+    resources:
+      pipelines:
+        exo-refine-gtfs:
+          name: exo-refine-gtfs-${bundle.target}
+          clusters:
+            - label: "default"
+              num_workers: 4
+    workspace:
+      root_path: /exo-gtfs
+    git:
+      branch: main
