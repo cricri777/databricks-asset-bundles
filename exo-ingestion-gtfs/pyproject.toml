@@ -4,6 +4,7 @@ version = "0.0.1"
 description = "package responsable de l'ingestion des données brute gtfs produits par exo"
 authors = ["Christian Bruneau <christian.bruneau777@gmail.com>"]
 
+
 [project.dependencies]
 requires-python = ">=3.10"
 
@@ -14,8 +15,11 @@ description = "exo gtfs ingestion"
 authors = ["christian.bruneau"]
 readme = "README.md"
 
+[tool.poetry.scripts]
+ingest = "exo_ingestion_gtfs.main:ingest"
+
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.10"
 databricks-connect = "14.1.0"
 fire = "0.5.0"
 pandas = "1.5.3"

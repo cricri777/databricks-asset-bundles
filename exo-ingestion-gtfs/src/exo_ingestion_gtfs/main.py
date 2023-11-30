@@ -6,14 +6,15 @@ from io import BytesIO
 from zipfile import ZipFile
 import pandas as pd
 import fire
-
 from databricks.connect import DatabricksSession
 import warnings
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
+def ingest():
+    fire.Fire(run)
 
-def run(env="dev", is_dry_run=True):
+def run(env="dev", is_dry_run=False):
     session = DatabricksSession.builder.getOrCreate()
     session.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
     session.conf.set("spark.sql.execution.arrow.pyspark.fallback.enabled", "true")
@@ -24,7 +25,9 @@ def run(env="dev", is_dry_run=True):
 
     session.sql(f"USE CATALOG exo_{env}")
 
-    dll_resource_path = os.path.abspath(os.path.join(os.getcwd(), 'resources/'))
+    # dll_resource_path = os.path.join(os.getcwd(), 'resources/'))
+    dll_resource_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'resources/')
+
     for dll_file in os.listdir(dll_resource_path):
         with open(os.path.join(dll_resource_path, dll_file), 'r') as query_sql:
             print(f"execute sql [{dll_file}]")
@@ -114,4 +117,4 @@ def run(env="dev", is_dry_run=True):
 
 
 if __name__ == '__main__':
-    fire.Fire(run)
+    ingest()
