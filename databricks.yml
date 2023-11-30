@@ -17,17 +17,27 @@ resources:
       name: exo-ingestion-gtfs-${bundle.target}
       tasks:
         - task_key: exo-ingestion-gtfs-task
-          existing_cluster_id: 1127-184500-z9lq82ws
+          existing_cluster_id: 1130-163615-1mtvpjso
           python_wheel_task:
             entry_point: ingest
             package_name: exo_ingestion_gtfs
+            parameters:
+              - --env
+              - ${bundle.target}
           libraries:
             - whl: exo-ingestion-gtfs/dist/*.whl
+        - task_key: exo-refine-gtfs-task
+          pipeline_task:
+            pipeline_id: exo-refine-gtfs-${bundle.target}
+            full_refresh: true
+          depends_on:
+            - task_key: exo-ingestion-gtfs-task
+
   pipelines:
     exo-refine-gtfs:
       name: exo-refine-gtfs-${bundle.target}
       catalog: exo_${bundle.target}
-      target: gtfs_refine
+      target: gtfs_refined
       development: true
       continuous: false
       channel: CURRENT
@@ -39,9 +49,17 @@ resources:
       clusters:
         - label: "default"
           num_workers: 1
-          node_type_id: "Standard_D3_v2"
-          driver_node_type_id: "Standard_D3_v2"
+          node_type_id: "Standard_F4"
+          driver_node_type_id: "Standard_F4"
 
 environments:
   dev:
     default: true
+  qa:
+#    workspace:
+#      host: <qa_workspace>
+  prod:
+    resources:
+      jobs:
+  #    workspace:
+  #      host: <prod_workspace>

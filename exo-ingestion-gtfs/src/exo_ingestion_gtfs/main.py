@@ -11,8 +11,10 @@ import warnings
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
+
 def ingest():
     fire.Fire(run)
+
 
 def run(env="dev", is_dry_run=False):
     session = DatabricksSession.builder.getOrCreate()
@@ -21,7 +23,8 @@ def run(env="dev", is_dry_run=False):
 
     session.sql(f"CREATE CATALOG IF NOT EXISTS exo_{env} COMMENT 'Catalog pour les données GTFS Exo env [{env}]'")
 
-    session.sql(f"CREATE SCHEMA IF NOT EXISTS exo_{env}.gtfs_landing COMMENT 'Schema landing pour les données GTFS Exo env [{env}]'")
+    session.sql(
+        f"CREATE SCHEMA IF NOT EXISTS exo_{env}.gtfs_landing COMMENT 'Schema landing pour les données GTFS Exo env [{env}]'")
 
     session.sql(f"USE CATALOG exo_{env}")
 
@@ -71,34 +74,44 @@ def run(env="dev", is_dry_run=False):
         for file in files:
             if file == "agency.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    dict_exo_gtfs_df["agency"] = pd.concat([dict_exo_gtfs_df["agency"], pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["agency"] = pd.concat(
+                        [dict_exo_gtfs_df["agency"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "stops.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    dict_exo_gtfs_df["stops"] = pd.concat([dict_exo_gtfs_df["stops"], pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["stops"] = pd.concat(
+                        [dict_exo_gtfs_df["stops"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "routes.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    dict_exo_gtfs_df["routes"] = pd.concat([dict_exo_gtfs_df["routes"], pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["routes"] = pd.concat(
+                        [dict_exo_gtfs_df["routes"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "trips.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    dict_exo_gtfs_df["trips"] = pd.concat([dict_exo_gtfs_df["trips"], pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["trips"] = pd.concat(
+                        [dict_exo_gtfs_df["trips"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "stop_times.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    dict_exo_gtfs_df["stop_times"] = pd.concat([dict_exo_gtfs_df["stop_times"], pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["stop_times"] = pd.concat(
+                        [dict_exo_gtfs_df["stop_times"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "calendar.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    dict_exo_gtfs_df["calendar"] = pd.concat([dict_exo_gtfs_df["calendar"], pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["calendar"] = pd.concat(
+                        [dict_exo_gtfs_df["calendar"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "calendar_dates.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    dict_exo_gtfs_df["calendar_dates"] = pd.concat([dict_exo_gtfs_df["calendar_dates"], pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["calendar_dates"] = pd.concat(
+                        [dict_exo_gtfs_df["calendar_dates"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "fare_rules.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    dict_exo_gtfs_df["fare_rules"] = pd.concat([dict_exo_gtfs_df["fare_rules"], pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["fare_rules"] = pd.concat(
+                        [dict_exo_gtfs_df["fare_rules"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "shapes.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    dict_exo_gtfs_df["shapes"] = pd.concat([dict_exo_gtfs_df["shapes"], pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["shapes"] = pd.concat(
+                        [dict_exo_gtfs_df["shapes"], pd.read_csv(BytesIO(csvfile.read()))])
             elif file == "feed_info.txt":
                 with zip_file.open(file, 'r') as csvfile:
-                    dict_exo_gtfs_df["feed_info"] = pd.concat([dict_exo_gtfs_df["feed_info"], pd.read_csv(BytesIO(csvfile.read()))])
+                    dict_exo_gtfs_df["feed_info"] = pd.concat(
+                        [dict_exo_gtfs_df["feed_info"], pd.read_csv(BytesIO(csvfile.read()))])
 
     for gtfs_exo_name, gtfs_exo_df in dict_exo_gtfs_df.items():
         gtfs_exo_df = gtfs_exo_df.astype("string")
@@ -108,12 +121,16 @@ def run(env="dev", is_dry_run=False):
             spark_stop_times_df1 = session.createDataFrame(df_1).withColumn("landing_date", current_date())
             spark_stop_times_df2 = session.createDataFrame(df_2).withColumn("landing_date", current_date())
             if not is_dry_run:
-                spark_stop_times_df1.union(spark_stop_times_df2).write.mode("overwrite").option("replaceWhere","landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.{gtfs_exo_name}")
+                spark_stop_times_df1.union(spark_stop_times_df2).write.mode("overwrite").option("replaceWhere",
+                                                                                                "landing_date = current_date()").saveAsTable(
+                    f"exo_{env}.gtfs_landing.{gtfs_exo_name}")
 
         else:
             gtfs_exo_pyspark_df = session.createDataFrame(gtfs_exo_df).withColumn("landing_date", current_date())
             if not is_dry_run:
-                gtfs_exo_pyspark_df.write.mode("overwrite").option("replaceWhere", "landing_date = current_date()").saveAsTable(f"exo_{env}.gtfs_landing.{gtfs_exo_name}")
+                gtfs_exo_pyspark_df.write.mode("overwrite").option("replaceWhere",
+                                                                   "landing_date = current_date()").saveAsTable(
+                    f"exo_{env}.gtfs_landing.{gtfs_exo_name}")
 
 
 if __name__ == '__main__':
